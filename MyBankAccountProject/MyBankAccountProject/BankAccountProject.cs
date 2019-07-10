@@ -14,22 +14,22 @@ namespace MyBankAccountProject
         {
             this.client = client;
         }
+        public AccountState AccountState { get; set; }
         public void InfoAboutPerson()
         {
-            Console.WriteLine("Information for creating a bank account:");
+            Console.WriteLine("Added information for creating a bank account:");
             Console.WriteLine($"Firstname:{client.FirstName}");
             Console.WriteLine($"Lastname:{client.LastName}");
             Console.WriteLine($"Cnp:{client.Cnp}");
             Console.WriteLine($"Address:{client.Address}");
-            foreach (var completeTransaction in ListOfTransactions)
-            {
-                Console.WriteLine($"Transaction of type: {completeTransaction.Transaction.TypeTransaction} \nValue: {completeTransaction.Transaction.AmountTransaction},\nDate:{completeTransaction.Transaction.DateTransaction},\nDetails:{completeTransaction.Transaction.DetailTransaction}");
-                Console.WriteLine($"Comision: {completeTransaction.Comision.Value}");
-            }
         }
         public void OpenAccount()
         {
-            Console.WriteLine($"The account is {AccountState.Opened}!");
+            if (AccountState == AccountState.Closed)
+            {
+                AccountState = AccountState.Opened;
+                Console.WriteLine($"The account is {AccountState}!");
+            }
         }
         public void CloseAccount()
         {
@@ -41,7 +41,8 @@ namespace MyBankAccountProject
             {
                 if (balance == 0)
                 {
-                    Console.WriteLine($"At client's request, this account will be {AccountState.Closed}!");
+                    AccountState = AccountState.Closed;
+                    Console.WriteLine($"At client's request, this account will be {AccountState}!");
                 }
             }
         }
@@ -81,11 +82,7 @@ namespace MyBankAccountProject
         }
         public void InfoComissions()
         {
-            Console.WriteLine("Information about this bank account:");
-            Console.WriteLine($"Firstname:{client.FirstName}");
-            Console.WriteLine($"Lastname:{client.LastName}");
-            Console.WriteLine($"Cnp:{client.Cnp}");
-            Console.WriteLine($"Address:{client.Address}");
+            Console.WriteLine("\nList of transactions with comission:\n");
             foreach (var completeTransaction in ListOfTransactions)
             {
                 Console.WriteLine($"Comision: {completeTransaction.Comision.Value} paid for:\nTransaction of type:{completeTransaction.Transaction.TypeTransaction}\nAmount:{completeTransaction.Transaction.AmountTransaction}\nDate:{completeTransaction.Transaction.DateTransaction}\nDetails:{completeTransaction.Transaction.DetailTransaction}");
