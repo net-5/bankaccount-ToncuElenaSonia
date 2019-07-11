@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBankAccountProject
+namespace BankAccount
 {
     public enum TypeTransaction { Deposit, Withdrawal }
     public class Transaction

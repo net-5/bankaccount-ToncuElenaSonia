@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyBankAccountProject
+namespace BankAccount
 {
     public enum AccountState { Opened, Closed }
-    class BankAccountProject
+    class BankAccount
     {
         private decimal balance = 0;
         private Person client;
         public List<CompleteTransaction> ListOfTransactions { get; set; } = new List<CompleteTransaction>();
-        public BankAccountProject(Person client)
+        public BankAccount(Person client)
         {
             this.client = client;
         }
@@ -33,17 +33,10 @@ namespace MyBankAccountProject
         }
         public void CloseAccount()
         {
-            if (balance > 0)
+            if (AccountState == AccountState.Opened)
             {
-                Console.WriteLine("Operation to close the account fails!!");
-            }
-            else
-            {
-                if (balance == 0)
-                {
-                    AccountState = AccountState.Closed;
-                    Console.WriteLine($"At client's request, this account will be {AccountState}!");
-                }
+                AccountState = AccountState.Closed;
+                Console.WriteLine($"At client's request, this account will be {AccountState}!");
             }
         }
         public void AddDeposit(decimal amount, string detailTransaction)
@@ -63,17 +56,20 @@ namespace MyBankAccountProject
                 Console.WriteLine("You must introduce a valid amount!");
             }
         }
-        public void Withdrawal(decimal amount, string detailTransaction)
+        public void Withdraw(decimal amount, string detailTransaction)
         {
-            Transaction t = new Transaction(amount, TypeTransaction.Withdrawal, detailTransaction);
-            Comision c = new Comision(amount, TypeTransaction.Withdrawal, detailTransaction);
-            if (balance > 0 && balance >= amount + c.Value)
+            if (balance > 0)
             {
-                balance -= amount + c.Value;
-                ListOfTransactions.Add(new CompleteTransaction(t, c));
-                Console.WriteLine(amount - c.Value + "->has been withdrawn from your account");
-                Console.WriteLine(c.Value + "->bank comision");
-                ShowNewBalance();
+                Transaction t = new Transaction(amount, TypeTransaction.Withdrawal, detailTransaction);
+                Comision c = new Comision(amount, TypeTransaction.Withdrawal, detailTransaction);
+                if (balance >= amount + c.Value)
+                {
+                    balance -= amount + c.Value;
+                    ListOfTransactions.Add(new CompleteTransaction(t, c));
+                    Console.WriteLine(amount - c.Value + "->has been withdrawn from your account");
+                    Console.WriteLine(c.Value + "->bank comision");
+                    ShowNewBalance();
+                }
             }
             else
             {
@@ -82,10 +78,12 @@ namespace MyBankAccountProject
         }
         public void InfoComissions()
         {
-            Console.WriteLine("\nList of transactions with comission:\n");
+            Console.WriteLine("\nInformation about this bank account:\n");
+            InfoAboutPerson();
+            Console.WriteLine("\nList of transactions with comission for this bank account:\n");
             foreach (var completeTransaction in ListOfTransactions)
             {
-                Console.WriteLine($"Comision: {completeTransaction.Comision.Value} paid for:\nTransaction of type:{completeTransaction.Transaction.TypeTransaction}\nAmount:{completeTransaction.Transaction.AmountTransaction}\nDate:{completeTransaction.Transaction.DateTransaction}\nDetails:{completeTransaction.Transaction.DetailTransaction}");
+                Console.WriteLine($"\nComision: {completeTransaction.Comision.Value} paid for:\nTransaction of type:{completeTransaction.Transaction.TypeTransaction}\nAmount:{completeTransaction.Transaction.AmountTransaction}\nDate:{completeTransaction.Transaction.DateTransaction}\nDetails:{completeTransaction.Transaction.DetailTransaction}\n");
             }
         }
         public void ShowNewBalance()
